@@ -25,3 +25,6 @@ go.work
 # OS specific
 .DS_Store
 Thumbs.db
+
+# Database registers
+users.db

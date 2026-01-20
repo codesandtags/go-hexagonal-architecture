@@ -64,16 +64,34 @@ curl -X GET http://localhost:8080/users/edwin123
 ## Testing & Coverage
 
 Run unit tests:
+
 ```bash
 go test -v ./...
 ```
 
 Run tests with coverage:
+
 ```bash
-go test -coverprofile=coverage.out ./...
+make test-cover
 ```
 
-View coverage report:
+## Docker
+
+Build the Docker image:
+
 ```bash
-go tool cover -func=coverage.out
+make docker-build
 ```
+
+Run the Docker container:
+
+```bash
+make docker-run
+```
+
+Stop the Docker container:
+
+```bash
+make docker-stop
+```
+

@@ -11,7 +11,14 @@ import (
 
 func main() {
 	// 1. Driven Adapter
-	repo := repository.NewInMemoryRepo()
+	// Example using an In-Memory Repository
+	// repo := repository.NewInMemoryRepo()
+
+	// Example using a SQLite Repository
+	repo, err := repository.NewSQliteRepository("./users.db")
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
 
 	// 2. Core Service
 	service := services.NewUserService(repo)
