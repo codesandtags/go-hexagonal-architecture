@@ -1,6 +1,9 @@
 # Run the application
 run:
-	@go run cmd/api/main.go
+	@DB_TYPE=memory go run cmd/api/main.go
+
+run-sqlite:
+	@DB_TYPE=sqlite go run cmd/api/main.go
 
 # Build the application
 build:
@@ -25,7 +28,7 @@ docker-build:
 
 # Run Docker container
 docker-run:
-	@docker run -p 8080:8080 go-hexagonal ./main -db=sqlite
+	@docker run -p 8080:8080 -e DB_TYPE=sqlite go-hexagonal
 
 # Stop Docker container
 docker-stop:

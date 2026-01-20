@@ -35,6 +35,9 @@ RUN apk --no-cache add ca-certificates
 # We copy ONLY the binary from the "builder" stage
 COPY --from=builder /app/main .
 
+# Environment variables
+ENV DB_TYPE=memory
+
 # We expose the port
 EXPOSE 8080
 

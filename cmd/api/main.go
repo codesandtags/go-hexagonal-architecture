@@ -1,9 +1,9 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
+	"os"
 
 	"go-hexagonal/internal/adapters/handler"
 	"go-hexagonal/internal/adapters/repository"
@@ -13,18 +13,18 @@ import (
 
 func main() {
 	// 0. Define db type to use
-	dbType := flag.String("db", "memory", "Database type to use: `memory` or `sqlite`")
-	flag.Parse()
+	dbType := os.Getenv("DB_TYPE")
+
+	// Defult value
+	if dbType == "" {
+		dbType = "memory"
+	}
 
 	var repo ports.UserRepository
 	var err error
 
-	// 1. Driven Adapter
-	// Example using an In-Memory Repository
-	// repo := repository.NewInMemoryRepo()
-
-	// Example using a SQLite Repository
-	switch *dbType {
+	// 1. Selection of Strategy (Strategy Pattern)
+	switch dbType {
 	case "memory":
 		repo = repository.NewInMemoryRepo()
 		log.Println("Strategy: In-Memory Storage")
