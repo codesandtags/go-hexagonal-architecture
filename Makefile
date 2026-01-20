@@ -1,6 +1,6 @@
 # Run the application
 run:
-	@DB_TYPE=memory go run cmd/api/main.go
+	@go run cmd/api/main.go
 
 run-sqlite:
 	@DB_TYPE=sqlite go run cmd/api/main.go

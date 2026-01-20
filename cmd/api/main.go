@@ -9,10 +9,19 @@ import (
 	"go-hexagonal/internal/adapters/repository"
 	"go-hexagonal/internal/core/ports"
 	"go-hexagonal/internal/core/services"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// 0. Define db type to use
+
+	// Try to Load .env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file. Using system environment variables")
+	}
+
+	// Define db type to use
 	dbType := os.Getenv("DB_TYPE")
 
 	// Defult value
@@ -21,7 +30,6 @@ func main() {
 	}
 
 	var repo ports.UserRepository
-	var err error
 
 	// 1. Selection of Strategy (Strategy Pattern)
 	switch dbType {
