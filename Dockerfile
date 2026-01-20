@@ -1,27 +1,25 @@
 # --------------------------------------------------------
 # Stage 1: Builder
-# Usamos la imagen oficial de Go para compilar
+# Oficial Go image
 # --------------------------------------------------------
 FROM golang:1.25-alpine AS builder
 
-# Instalamos git por si alguna dependencia lo requiere
-RUN apk add --no-cache git
+# We need git for some dependencies
+RUN apk add --no-cache git gcc musl-dev
 
 WORKDIR /app
 
-# Primero copiamos solo los archivos de dependencias.
-# Esto aprovecha la caché de capas de Docker: si no cambias el go.mod,
-# no se vuelven a descargar las librerías.
+# First we copy only the dependency files.
+# This takes advantage of Docker's layer cache: if you don't change go.mod,
+# the libraries won't be downloaded again.
 COPY go.mod go.sum ./
 RUN go mod download
 
-# Ahora copiamos el código fuente
+# Now we copy the source code
 COPY . .
 
-# Compilamos el binario
-# -o main: nombre del output
-# cmd/api/main.go: la ruta de tu entrypoint
-RUN go build -o main cmd/api/main.go
+# Enable CGO explicitly when compiling
+RUN CGO_ENABLED=1 go build -o main cmd/api/main.go
 
 # --------------------------------------------------------
 # Stage 2: Runner
@@ -31,16 +29,13 @@ FROM alpine:latest
 
 WORKDIR /root/
 
-# Instalamos certificados CA por si tu app necesita hacer llamadas HTTPS externas
+# We install CA certificates in case your app needs to make external HTTPS calls
 RUN apk --no-cache add ca-certificates
-RUN apk add --no-cache git gcc musl-dev
-# Habilitar CGO explícitamente al compilar
-RUN CGO_ENABLED=1 go build -o main cmd/api/main.go
 
-# Copiamos SOLO el binario desde la etapa "builder"
+# We copy ONLY the binary from the "builder" stage
 COPY --from=builder /app/main .
 
-# Exponemos el puerto
+# We expose the port
 EXPOSE 8080
 
 # Comando de ejecución

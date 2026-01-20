@@ -25,7 +25,7 @@ docker-build:
 
 # Run Docker container
 docker-run:
-	@docker run -p 8080:8080 go-hexagonal
+	@docker run -p 8080:8080 go-hexagonal ./main -db=sqlite
 
 # Stop Docker container
 docker-stop:
